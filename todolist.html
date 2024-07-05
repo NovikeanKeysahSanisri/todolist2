@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Georgia;
+            background-color: #F1E5D1;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            font-family: Georgia;
+        }
+        form, table {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #DBB5B5;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #DBB5B5;
+            border-radius: 4px;
+        }
+        input[type="submit"], input[type="button"] {
+            background-color: #987070;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-family: Georgia;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #C39898;
+        }
+        table {
+            border-collapse: collapse #987070;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #DBB5B5;
+        }
+        th {
+            background-color: #C39898;
+            border: 1px solid #987070;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Wellcome to my To-Do list</h1>
+    <form id="todoForm">
+        <table>
+            <tbody>
+                <tr>
+                    <td><label for="todo">To-do:</label></td>
+                    <td><input type="text" id="todo" name="todo"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="add"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <h1 style="align-items: center;">To-Do list</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Filter: </th>
+                <th><input type="text" id="search" name="search"></th>
+            </tr>
+        </thead>
+        <tbody id="todolistBody">
+        </tbody>
+    </table>
+
+    <script>
+        const todolist = [];
+
+        function removeTodolist(index) {
+            todolist.splice(index, 1);
+            displayTodolist();
+        }
+
+        function addTodolist(todo) {
+            const tr = document.createElement("tr");
+
+            const tdButton = document.createElement("td");
+            const buttonDone = document.createElement("input");
+            buttonDone.type = "button";
+            buttonDone.value = "Done";
+            buttonDone.onclick = function () {
+                removeTodolist(todolist.indexOf(todo));
+            };
+            tdButton.appendChild(buttonDone);
+
+            const tdTodo = document.createElement("td");
+            tdTodo.textContent = todo;
+
+            tr.appendChild(tdButton);
+            tr.appendChild(tdTodo);
+
+            const todolistBody = document.getElementById("todolistBody");
+            todolistBody.appendChild(tr);
+        }
+
+        function clearTodolist() {
+            const todolistBody = document.getElementById("todolistBody");
+            while (todolistBody.firstChild) {
+                todolistBody.removeChild(todolistBody.firstChild);
+            }
+        }
+
+        function displayTodolist() {
+            clearTodolist();
+
+            const searchText = document.getElementById("search").value.toLowerCase();
+
+            for (let i = 0; i < todolist.length; i++) {
+                const todo = todolist[i];
+
+                if (todo.toLowerCase().includes(searchText)) {
+                    addTodolist(todo);
+                }
+            }
+        }
+
+        document.getElementById('todoForm').onsubmit = function (event) {
+            event.preventDefault();
+
+            const todo = document.getElementById('todo').value;
+            todolist.push(todo);
+
+            document.getElementById('todoForm').reset();
+
+            console.info(todolist);
+            displayTodolist();
+        };
+
+        const searchInput = document.getElementById("search");
+
+        searchInput.onkeyup = function () {
+            displayTodolist();
+        }
+
+        searchInput.onkeydown = function () {
+            displayTodolist();
+        }
+
+        displayTodolist();
+    </script>
+</body>
+</html>
